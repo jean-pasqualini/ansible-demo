@@ -1,0 +1,48 @@
+---
+- name: Provision generic
+  hosts: all
+
+  vars_files:
+    - ./vars/vault.yml
+    - ./vars/vars.yml
+
+  roles:
+    - common
+
+# Provision app knp
+- name: Provision knp app
+  hosts: app-knp
+
+  vars_files:
+    - ./vars/vault.yml
+    - ./vars/vars.yml
+
+  roles:
+    - app-knp
+  vars:
+    ansistrano_deploy_via: git
+    ansistrano_deploy_to: "{{ symfony_root_dir }}"
+    ansistrano_git_branch: "master"
+    ansistrano_git_repo: "https://github.com/knpuniversity/ansible.git"
+    #ansistrano_after_symlink_tasks_file: "{{ playbook_dir }}/ss.yml"
+    ansistrano_before_symlink_tasks_file: "{{ playbook_dir }}/roles/app-knp/tasks/deploy-before-symlink-tasks.yml"
+
+# Provision app symfony
+- name: Provision symfony app
+  hosts: app-symfony
+
+  vars_files:
+    - ./vars/vault.yml
+    - ./vars/vars.yml
+
+  roles:
+    - app-symfony
+  vars:
+    ansistrano_keep_releases: 1
+    ansistrano_deploy_via: git
+    ansistrano_deploy_to: "{{ project_root_dir }}"
+    ansistrano_git_branch: "3.2"
+    ansistrano_git_repo: "https://github.com/symfony/symfony-standard.git"
+    ansistrano_before_setup_tasks_file: "{{ playbook_dir }}/roles/app-symfony/tasks/deploy-before-setup.yml"
+    ansistrano_after_symlink_tasks_file: "{{ playbook_dir }}/roles/app-symfony/tasks/deploy-after-symlink-tasks.yml"
+    ansistrano_before_symlink_tasks_file: "{{ playbook_dir }}/roles/app-symfony/tasks/deploy-before-symlink-tasks.yml"

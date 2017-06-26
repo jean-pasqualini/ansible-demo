@@ -1,0 +1,7 @@
+---
+dependencies:
+  - git
+  - nginx
+  - php
+  - mysql
+  - vendor.ansistrano.deploy

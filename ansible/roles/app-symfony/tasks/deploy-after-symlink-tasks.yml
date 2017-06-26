@@ -1,0 +1,30 @@
+---
+  - debug:
+      var: ansistrano_release_version
+    tags:
+      - deploy
+
+  - name: Installer composer dependencies
+    composer:
+      working_dir: "{{ '/var/www/project/current' }}"
+      no_dev: "{{ 'yes' if ('prod' == symfony_env) else 'no' }}"
+    environment:
+      SYMFONY_ENV: "{{ symfony_env }}"
+    tags:
+      - deploy
+      - composer
+
+  # Symfony commands
+
+  - name: Clear cache
+    command: "{{ ansistrano_release_path.stdout }}/bin/console cache:clear --env={{ symfony_env }}"
+    changed_when: false
+    tags:
+      - deploy
+
+  - name: "ensure {{ ansistrano_release_path.stdout }}/var is owned by www-data:www-data"
+    become: true
+    command: "chown -R www-data:www-data {{ ansistrano_release_path.stdout }}/var"
+    tags:
+      - permissions
+      - deploy

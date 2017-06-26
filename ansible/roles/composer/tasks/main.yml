@@ -1,0 +1,23 @@
+# Composer installation
+- name: Check for composer
+  stat:
+    path: /usr/local/bin/composer
+  register: composer_stat
+- name: Download Composer
+  script: scripts/install-composer.sh
+  when: not composer_stat.stat.exists
+- name: Move composer globaly
+  become: true
+  command: "mv composer.phar /usr/local/bin/composer"
+  when: not composer_stat.stat.exists
+- name: Set permission on composer
+  become: true
+  when: not composer_stat.stat.exists
+  file:
+    path: /usr/local/bin/composer
+    mode: "a+x"
+- name: Make sure Composer is at its latest version
+  composer:
+    working_dir: "{{ symfony_root_dir }}"
+    command: self-update
+  when: composer_stat.stat.exists

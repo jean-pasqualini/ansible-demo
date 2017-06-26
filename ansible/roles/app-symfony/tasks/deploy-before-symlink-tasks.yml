@@ -1,0 +1,7 @@
+---
+  - name: "ensure {{ ansistrano_deploy_to }} is owned by {{ ansible_user }}.{{ ansible_user }}"
+    become: true
+    command: "chown -R {{ ansible_user }}.{{ ansible_user }} {{ ansistrano_deploy_to }}"
+    tags:
+      - permissions
+      - deploy

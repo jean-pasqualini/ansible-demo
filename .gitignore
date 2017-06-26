@@ -1,0 +1,5 @@
+vendor/
+.idea
+ansible/vendor
+.vault_pass.txt
+ansible/playbook.retry

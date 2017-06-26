@@ -1,0 +1,6 @@
+- src: https://github.com/ansistrano/deploy
+  version: 2.6.0
+  name: vendor.ansistrano.deploy
+- src: https://github.com/ansistrano/rollback
+  version: 1.3.0
+  name: vendor.ansistrano.rollback

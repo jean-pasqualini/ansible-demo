@@ -1,0 +1,8 @@
+---
+dependencies:
+  - git
+  - role: nginx
+    tags: ['set']
+  - php
+  - role: vendor.ansistrano.deploy
+    tags: ['deploy']

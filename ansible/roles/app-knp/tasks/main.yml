@@ -1,0 +1,11 @@
+---
+- name: Create project directory and sets permissions
+  become: true
+  file:
+    path: "{{ symfony_root_dir }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    state: directory
+    recurse: yes
+  tags:
+    - deploy
