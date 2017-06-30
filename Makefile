@@ -24,7 +24,11 @@ composer: ## Install dependencies of app
 
 packer-build: ## Build image on gcloud
 	$(info --> Deploy app app-symfony on env ...)
-	./scripts/packer-build.sh
+	PACKER_FILE=gcloud ./scripts/packer-build.sh
+
+packer-deploy-virtualbox: ## Deploy image on vm virtualbox (sudo escalade without password is required)
+	$(info --> Deploy app ${APP_NAME} on env ${SYMFONY_ENV} on virtualbox...)
+	PACKER_FILE=local ANSIBLE_GROUPS=${APP_NAME} SYMFONY_ENV=${SYMFONY_ENV:prod} ./scripts/packer-build.sh
 
 install-ansible: ## Install ansible via pip
 	$(info --> Install ansible via `pip`)

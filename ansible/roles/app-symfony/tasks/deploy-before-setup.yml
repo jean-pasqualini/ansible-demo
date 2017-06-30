@@ -1,4 +1,6 @@
 ---
+- debug:
+    var: ansible_user
 - name: Create project directory and sets permissions
   become: true
   file:

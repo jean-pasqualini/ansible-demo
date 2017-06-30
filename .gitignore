@@ -1,5 +1,6 @@
 vendor/
 .idea
 ansible/vendor
+ansible/playbook.retry
 .vault_pass.txt
 ansible/playbook.retry

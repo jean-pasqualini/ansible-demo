@@ -4,5 +4,6 @@ dependencies:
   - role: nginx
     tags: ['set']
   - php
+  - composer
   - role: vendor.ansistrano.deploy
     tags: ['deploy']

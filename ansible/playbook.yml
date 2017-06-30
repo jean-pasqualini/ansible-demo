@@ -21,10 +21,11 @@
     - app-knp
   vars:
     ansistrano_deploy_via: git
-    ansistrano_deploy_to: "{{ symfony_root_dir }}"
+    ansistrano_deploy_to: "{{ project_root_dir }}"
     ansistrano_git_branch: "master"
     ansistrano_git_repo: "https://github.com/knpuniversity/ansible.git"
-    #ansistrano_after_symlink_tasks_file: "{{ playbook_dir }}/ss.yml"
+    ansistrano_before_setup_tasks_file: "{{ playbook_dir }}/roles/app-knp/tasks/deploy-before-setup.yml"
+    ansistrano_after_symlink_tasks_file: "{{ playbook_dir }}/roles/app-knp/tasks/deploy-after-symlink-tasks.yml"
     ansistrano_before_symlink_tasks_file: "{{ playbook_dir }}/roles/app-knp/tasks/deploy-before-symlink-tasks.yml"
 
 # Provision app symfony

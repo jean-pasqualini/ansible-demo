@@ -1,0 +1,32 @@
+{
+  "variables": {
+    "upgrade": "0",
+    "ansible_groups" : "{{ env `ANSIBLE_GROUPS` }}"
+  },
+  "builders": [
+    {
+      "type":           "null",
+      "communicator":   "ssh",
+      "ssh_pty":        true,
+      "ssh_host":       "carapace.gcloud",
+      "ssh_port":       "22",
+      "ssh_username":   "darkilliant",
+      "ssh_password":   "darkilliant"
+    }
+  ],
+  "provisioners" : [
+    {
+      "type": "shell-local",
+      "command": "find ansible/vendor/roles/ -type l | xargs -I % -n 1 unlink %"
+    },
+    {
+      "type": "ansible",
+      "playbook_file": "./ansible/playbook.yml",
+      "groups" : ["{{ user `ansible_groups` }}"],
+      "user" : "darkilliant",
+      "extra_arguments" : [
+        "--extra-vars", "symfony_env=prod"
+      ]
+    }
+  ]
+}

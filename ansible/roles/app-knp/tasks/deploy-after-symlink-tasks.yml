@@ -1,0 +1,75 @@
+---
+  - debug:
+      var: ansistrano_release_version
+    tags:
+      - deploy
+
+  - name: Installer composer dependencies
+    composer:
+      working_dir: "{{ '/var/www/project/current' }}"
+      no_dev: "{{ 'yes' if ('prod' == symfony_env) else 'no' }}"
+    environment:
+      SYMFONY_ENV: "{{ symfony_env }}"
+    tags:
+      - deploy
+      - composer
+
+  - name: Set Symfony secret in parameters.yml
+    lineinfile:
+      dest: "{{ symfony_root_dir }}/app/config/parameters.yml"
+      regexp: "^    secret:"
+      line: "    secret: {{ symfony_secret }}"
+    tags:
+      - deploy
+
+  - name: Set Loggly token in parameters.yml
+    lineinfile:
+      dest: "{{ symfony_root_dir }}/app/config/parameters.yml"
+      regexp: "^    loggly_token:"
+      line: "    loggly_token: {{ loggly_token }}"
+    tags:
+      - deploy
+
+  # Symfony commands
+
+  - name: Create DB if not exists
+    command: "{{ symfony_console_path }} doctrine:database:create --if-not-exists"
+    register: db_create_result
+    changed_when: "not {{ db_create_result.stdout|search('already exists. Skipped') }}"
+    environment:
+      SYMFONY_ENV: "{{ symfony_env }}"
+    tags:
+      - deploy
+
+  - name: Executes migrations
+    command: "{{ symfony_console_path }} doctrine:migrations:migrate --no-interaction"
+    register: db_migrations_result
+    changed_when: "not {{ db_migrations_result.stdout|search('No migrations to execute') }}"
+    environment:
+      SYMFONY_ENV: "{{ symfony_env }}"
+    tags:
+      - deploy
+
+  - name: Load data fixtures
+    command: "{{ symfony_console_path }} hautelook_alice:doctrine:fixtures:load --no-interaction"
+    environment:
+      SYMFONY_ENV: "{{ symfony_env }}"
+    changed_when: false
+    when: symfony_env != "prod"
+    tags:
+      - deploy
+
+  - name: Clear cache
+    command: "{{ ansistrano_release_path.stdout }}/bin/console cache:clear --env={{ symfony_env }}"
+    environment:
+      SYMFONY_ENV: "{{ symfony_env }}"
+    changed_when: false
+    tags:
+      - deploy
+
+  - name: "ensure {{ ansistrano_release_path.stdout }}/var is owned by www-data:www-data"
+    become: true
+    command: "chown -R www-data:www-data {{ ansistrano_release_path.stdout }}/var"
+    tags:
+      - permissions
+      - deploy
