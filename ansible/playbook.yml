@@ -29,7 +29,7 @@
     ansistrano_before_symlink_tasks_file: "{{ playbook_dir }}/roles/app-knp/tasks/deploy-before-symlink-tasks.yml"
 
 # Provision app symfony
-- name: Provision symfony app
+- name: Provision sycmfony app
   hosts: app-symfony
 
   vars_files:

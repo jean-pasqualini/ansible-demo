@@ -2,10 +2,10 @@
 - name: MYSQL PPA
   become: true
   apt_repository:
-    repo: 'ppa:ondrej/mysql-5.6'
+    repo: 'ppa:ondrej/mysql-5.5'
 
 - name: Install mysql server
   become: true
   apt:
-    name: mysql-server-5.6
+    name: mysql-server-5.5
     state: latest

@@ -3,5 +3,6 @@ dependencies:
   - git
   - nginx
   - php
+  - composer
   - mysql
   - vendor.ansistrano.deploy
