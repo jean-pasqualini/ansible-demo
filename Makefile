@@ -1,5 +1,6 @@
 SHELL := /usr/bin/env bash
 
+
 help:
 	$(info Configuration)
 	$(info -------------)
@@ -31,9 +32,14 @@ packer-deploy-virtualbox: ## Deploy image on vm virtualbox (sudo escalade withou
 	PACKER_FILE=local ANSIBLE_GROUPS=${APP_NAME} SYMFONY_ENV=${SYMFONY_ENV:prod} ./scripts/packer-build.sh
 
 install-ansible: ## Install ansible via pip
-	$(info --> Install ansible via `pip`)
 	@if [[ "$$CI" -eq 1 ]]; then \
 		pip install -q -r requirements.txt; \
 	else \
 		pip install -q --user -r requirements.txt; \
 	fi
+
+terraform-apply: ## Apply infrastructure
+	echo '---> Apply'
+	cd terraform
+	terraform apply
+	cd -

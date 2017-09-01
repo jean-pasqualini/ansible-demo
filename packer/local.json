@@ -5,20 +5,22 @@
   },
   "builders": [
     {
-      "type":           "null",
-      "communicator":   "ssh",
-      "ssh_pty":        true,
-      "ssh_host":       "carapace.gcloud",
-      "ssh_port":       "22",
-      "ssh_username":   "darkilliant",
-      "ssh_private_key_file": "/home/darkilliant/.ssh/google_compute_engine",
-      "ssh_timeout": "2s"
+      "type": "docker",
+      "image": "ubuntu",
+      "commit": true
     }
   ],
   "provisioners" : [
     {
       "type": "shell-local",
       "command": "find ansible/vendor/roles/ -type l | xargs -I % -n 1 unlink %"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "apt-get update && apt-get install -y python",
+        "apt-get install -y sudo"
+      ]
     },
     {
       "type": "ansible",
