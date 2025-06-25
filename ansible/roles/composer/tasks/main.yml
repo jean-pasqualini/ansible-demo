@@ -8,16 +8,16 @@
   when: not composer_stat.stat.exists
 - name: Move composer globaly
   become: true
-  command: "mv composer.phar /usr/local/bin/composer"
+  ansible.builtin.command: "mv composer.phar /usr/local/bin/composer"
   when: not composer_stat.stat.exists
 - name: Set permission on composer
   become: true
   when: not composer_stat.stat.exists
-  file:
+  ansible.builtin.file:
     path: /usr/local/bin/composer
     mode: "a+x"
-- name: Make sure Composer is at its latest version
-  composer:
-    working_dir: "{{ symfony_root_dir }}"
-    command: self-update
-  when: composer_stat.stat.exists
+#- name: Make sure Composer is at its latest version
+#  community.general.composer:
+#    working_dir: "{{ symfony_root_dir }}"
+#    command: self-update
+#  when: composer_stat.stat.exists

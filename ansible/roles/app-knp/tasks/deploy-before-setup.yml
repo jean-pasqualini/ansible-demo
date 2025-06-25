@@ -1,11 +1,12 @@
 ---
-- debug:
+- name: Debug ansible_user
+  ansible.builtin.debug:
     var: ansible_user
 - name: Create project directory and sets permissions
   become: true
-  file:
+  ansible.builtin.file:
     path: "{{ project_root_dir }}"
     owner: "{{ ansible_user }}"
     group: "{{ ansible_user }}"
     state: directory
-    recurse: yes
+    recurse: true

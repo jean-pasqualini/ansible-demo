@@ -1,30 +1,35 @@
 ---
-  - debug:
-      var: ansistrano_release_version
-    tags:
-      - deploy
+- name: Debug ansistrano_release_version
+  ansible.builtin.debug:
+    var: ansistrano_release_version
+  tags:
+    - deploy
 
-  - name: Installer composer dependencies
-    composer:
-      working_dir: "{{ '/var/www/project/current' }}"
-      no_dev: "{{ 'yes' if ('prod' == symfony_env) else 'no' }}"
-    environment:
-      SYMFONY_ENV: "{{ symfony_env }}"
-    tags:
-      - deploy
-      - composer
+- name: Installer composer dependencies
+  community.general.composer:
+    working_dir: "{{ '/var/www/project/current' }}"
+    no_dev: "{{ 'yes' if ('prod' == symfony_env) else 'no' }}"
+  environment:
+    SYMFONY_ENV: "{{ symfony_env }}"
+  tags:
+    - deploy
+    - composer
 
-  # Symfony commands
+# Symfony commands
+- name: Clear cache
+  ansible.builtin.command: "{{ ansistrano_release_path.stdout }}/bin/console cache:clear --env={{ symfony_env }}"
+  changed_when: false
+  tags:
+    - deploy
 
-  - name: Clear cache
-    command: "{{ ansistrano_release_path.stdout }}/bin/console cache:clear --env={{ symfony_env }}"
-    changed_when: false
-    tags:
-      - deploy
-
-  - name: "ensure {{ ansistrano_release_path.stdout }}/var is owned by www-data:www-data"
-    become: true
-    command: "chown -R www-data:www-data {{ ansistrano_release_path.stdout }}/var"
-    tags:
-      - permissions
-      - deploy
+- name: "Ensure the ownership (www-data) of var directory at {{ ansistrano_release_path.stdout }}"
+  become: true
+  ansible.builtin.file:
+    path: "{{ ansistrano_release_path.stdout }}/var"
+    owner: www-data
+    group: www-data
+    recurse: true
+    state: directory
+  tags:
+    - permissions
+    - deploy

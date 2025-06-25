@@ -18,10 +18,6 @@ deploy: ## Deploy code
 	$(info --> Deploy app ${APP_NAME} on env ${SYMFONY_ENV})
 	ansible-playbook ansible/playbook.yml -i ansible/hosts.ini -t deploy -e "symfony_env=${SYMFONY_ENV}" -l "${APP_NAME}"
 
-composer: ## Install dependencies of app
-	$(info --> Deploy app ${APP_NAME} on env ${SYMFONY_ENV})
-	ansible-playbook ansible/playbook.yml -i ansible/hosts.ini -t composer -e "symfony_env=${SYMFONY_ENV}" -l "${APP_NAME}"
-
 packer-build: ## Build image on gcloud
 	$(info --> Deploy app app-symfony on env ...)
 	PACKER_FILE=gcloud ./scripts/packer-build.sh
@@ -32,8 +28,18 @@ packer-deploy-virtualbox: ## Deploy image on vm virtualbox (sudo escalade withou
 
 install-ansible: ## Install ansible via pip
 	$(info --> Install ansible via `pip`)
-	@if [[ "$$CI" -eq 1 ]]; then \
+	@if [ "$$VENV" = "1" ]; then \
 		pip install -q -r requirements.txt; \
 	else \
 		pip install -q --user -r requirements.txt; \
 	fi
+
+install-python:
+	brew install python@3.12
+	/opt/homebrew/opt/python@3.12/bin/python3.12 -m venv ~/.venvs/ansible
+
+check-playbook:
+	@ansible-playbook ansible/playbook.yml --syntax-check -i ansible/hosts.ini
+	
+lint:
+	@ansible-lint ansible/playbook.yml

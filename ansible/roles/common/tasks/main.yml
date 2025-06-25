@@ -1,19 +1,20 @@
 ---
 - name: Update APT Packager Manager repositories cache
   become: true
-  apt:
-    update_cache: yes
+  ansible.builtin.apt:
+    update_cache: true
 
 - name: Upgrade installed packages
   become: true
-  apt:
+  ansible.builtin.apt:
     upgrade: dist
 
-- ping: ~
+- name: Ping
+  ansible.builtin.ping: ~
 
 - name: Install low-level utilities
   become: true
-  apt:
+  ansible.builtin.apt:
     name: "{{ item }}"
   with_items:
     - zip

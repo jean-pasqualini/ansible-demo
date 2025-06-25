@@ -11,7 +11,8 @@ then
     exit 1
 fi
 
-php composer-setup.php --quiet
+# Installer Composer 2.2.25 (évite la dernière version 2.x par défaut)
+php composer-setup.php --quiet --version=2.2.25
 RESULT=$?
 rm composer-setup.php
 exit $RESULT
