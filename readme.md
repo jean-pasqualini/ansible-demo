@@ -11,6 +11,9 @@ Il est divisé en deux grandes étapes : le **provisioning** (environnement serv
 * `make`
 * Accès SSH aux serveurs (définis dans `ansible/hosts.ini`)
 * Accès à la clé de chiffrement Ansible Vault (`.vault_pass.txt`)
+* Avoir une distribution linux basé sur debian (testé sur Ubuntu serveur 24.04.2 LTS (Noble Numbat))
+* Soit configurer ansible.cfg pour demande le mot de passe pour l'élévation de privilège ou autoriser l'élevation de privilège depuis votre utilisateur ou groupe sans mot de passe dans /etc/sudoers
+* Avoir une authentification par clé ssh déjà configurer entre votre machine et la machine cible
 
 ---
 

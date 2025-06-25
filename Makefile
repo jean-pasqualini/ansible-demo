@@ -38,12 +38,13 @@ install-ansible: ## Install ansible via pip
 		pip install -q --user -r requirements.txt; \
 	fi
 
-install-python:
+install-python: ## Install python 3.12 (mac only) and create a venv ansible
+	$(info --> Install python 3.12)
 	brew install python@3.12
 	/opt/homebrew/opt/python@3.12/bin/python3.12 -m venv ~/.venvs/ansible
 
-check-playbook:
+check-playbook: ## Check if the playbook is valid
 	@ansible-playbook ansible/playbook.yml --syntax-check -i ansible/hosts.ini
 	
-lint:
+lint: ## Check if the playbook follow the good practices
 	@ansible-lint ansible/playbook.yml
