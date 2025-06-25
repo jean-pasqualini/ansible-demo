@@ -1,8 +1,12 @@
 ---
 dependencies:
   - role: git
+    tags: ['provisioning']
   - role: nginx
+    tags: ['provisioning']
   - role: php
+    tags: ['provisioning']
   - role: composer
+    tags: ['provisioning']
   - role: vendor.ansistrano.deploy
     tags: ['deploy']

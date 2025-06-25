@@ -14,6 +14,10 @@ get-ansible-vendor: ## Install ansible galaxy dependencies
 	$(info --> Get Ansible vendors)
 	ansible-galaxy install -r ansible/requirements-ansible.yml -p ansible/vendor/roles --force
 
+provisioning: ## Provisioning the execution environment
+	$(info --> Deploy app ${APP_NAME})
+	ansible-playbook ansible/playbook.yml -i ansible/hosts.ini -t provisioning -l "${APP_NAME}"
+
 deploy: ## Deploy code
 	$(info --> Deploy app ${APP_NAME} on env ${SYMFONY_ENV})
 	ansible-playbook ansible/playbook.yml -i ansible/hosts.ini -t deploy -e "symfony_env=${SYMFONY_ENV}" -l "${APP_NAME}"
