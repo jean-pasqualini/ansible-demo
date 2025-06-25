@@ -1,7 +1,12 @@
 ---
-  - name: "ensure {{ ansistrano_deploy_to }} is owned by {{ ansible_user }}.{{ ansible_user }}"
-    become: true
-    command: "chown -R {{ ansible_user }}.{{ ansible_user }} {{ ansistrano_deploy_to }}"
-    tags:
-      - permissions
-      - deploy
+- name: "Ensure the ownership of {{ ansistrano_deploy_to }}"
+  become: true
+  ansible.builtin.file:
+    path: "{{ ansistrano_deploy_to }}"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    recurse: true
+    state: directory
+  tags:
+    - permissions
+    - deploy

@@ -14,13 +14,13 @@ get-ansible-vendor: ## Install ansible galaxy dependencies
 	$(info --> Get Ansible vendors)
 	ansible-galaxy install -r ansible/requirements-ansible.yml -p ansible/vendor/roles --force
 
+provisioning: ## Provisioning the execution environment
+	$(info --> Deploy app ${APP_NAME})
+	ansible-playbook ansible/playbook.yml -i ansible/hosts.ini -t provisioning -l "${APP_NAME}"
+
 deploy: ## Deploy code
 	$(info --> Deploy app ${APP_NAME} on env ${SYMFONY_ENV})
 	ansible-playbook ansible/playbook.yml -i ansible/hosts.ini -t deploy -e "symfony_env=${SYMFONY_ENV}" -l "${APP_NAME}"
-
-composer: ## Install dependencies of app
-	$(info --> Deploy app ${APP_NAME} on env ${SYMFONY_ENV})
-	ansible-playbook ansible/playbook.yml -i ansible/hosts.ini -t composer -e "symfony_env=${SYMFONY_ENV}" -l "${APP_NAME}"
 
 packer-build: ## Build image on gcloud
 	$(info --> Deploy app app-symfony on env ...)
@@ -32,8 +32,19 @@ packer-deploy-virtualbox: ## Deploy image on vm virtualbox (sudo escalade withou
 
 install-ansible: ## Install ansible via pip
 	$(info --> Install ansible via `pip`)
-	@if [[ "$$CI" -eq 1 ]]; then \
+	@if [ "$$VENV" = "1" ]; then \
 		pip install -q -r requirements.txt; \
 	else \
 		pip install -q --user -r requirements.txt; \
 	fi
+
+install-python: ## Install python 3.12 (mac only) and create a venv ansible
+	$(info --> Install python 3.12)
+	brew install python@3.12
+	/opt/homebrew/opt/python@3.12/bin/python3.12 -m venv ~/.venvs/ansible
+
+check-playbook: ## Check if the playbook is valid
+	@ansible-playbook ansible/playbook.yml --syntax-check -i ansible/hosts.ini
+	
+lint: ## Check if the playbook follow the good practices
+	@ansible-lint ansible/playbook.yml

@@ -42,7 +42,7 @@
     ansistrano_keep_releases: 1
     ansistrano_deploy_via: git
     ansistrano_deploy_to: "{{ project_root_dir }}"
-    ansistrano_git_branch: "3.2"
+    ansistrano_git_branch: "3.4"
     ansistrano_git_repo: "https://github.com/symfony/symfony-standard.git"
     ansistrano_before_setup_tasks_file: "{{ playbook_dir }}/roles/app-symfony/tasks/deploy-before-setup.yml"
     ansistrano_after_symlink_tasks_file: "{{ playbook_dir }}/roles/app-symfony/tasks/deploy-after-symlink-tasks.yml"
