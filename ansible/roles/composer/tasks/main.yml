@@ -4,9 +4,9 @@
     path: /usr/local/bin/composer
   register: composer_stat
 - name: Download Composer
-  script: scripts/install-composer.sh
+  script: "{{ playbook_dir }}/scripts/install-composer.sh"
   when: not composer_stat.stat.exists
-- name: Move composer globaly
+- name: Move composer globally
   become: true
   command: "mv composer.phar /usr/local/bin/composer"
   when: not composer_stat.stat.exists
